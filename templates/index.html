@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Home - ctrl+coffee{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="text-align: center; margin-bottom: 4rem;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+        Welcome to ctrl+coffee
+    </h1>
+    <p style="font-size: 1.3rem; color: var(--text-light); max-width: 600px; margin: 0 auto 2rem;">
+        Discover the perfect blend of artisanal coffee, delightful treats, and cozy ambiance.
+    </p>
+    <a href="{{ url_for('menu') }}" class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;">
+        Explore Our Menu
+    </a>
+</section>
+
+<!-- Featured Categories -->
+<section style="margin-bottom: 4rem;">
+    <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; color: var(--primary); margin-bottom: 3rem;">
+        Our Specialties
+    </h2>
+    
+    <div class="grid grid-4">
+        <div class="card" style="text-align: center; padding: 2rem 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">☕</div>
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Coffee</h3>
+            <p style="color: var(--text-light);">Artisanal brews and classic favorites</p>
+        </div>
+        
+        <div class="card" style="text-align: center; padding: 2rem 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🥤</div>
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Cold Drinks</h3>
+            <p style="color: var(--text-light);">Refreshing beverages for any day</p>
+        </div>
+        
+        <div class="card" style="text-align: center; padding: 2rem 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🍵</div>
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Tea & More</h3>
+            <p style="color: var(--text-light);">Soothing teas and specialty drinks</p>
+        </div>
+        
+        <div class="card" style="text-align: center; padding: 2rem 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🍰</div>
+            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">Treats</h3>
+            <p style="color: var(--text-light);">Fresh bakery & delightful desserts</p>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Order Section -->
+<section class="quick-order">
+    <div class="card" style="max-width: 600px; margin: 0 auto;">
+        <h2 style="font-family: 'Playfair Display', serif; text-align: center; margin-bottom: 2rem; color: var(--primary);">
+            Quick Order
+        </h2>
+        
+        <form action="{{ url_for('add_to_cart') }}" method="post">
+            <div class="form-group">
+                <label for="customer_name" class="form-label">Your Name</label>
+                <input type="text" id="customer_name" name="customer_name" class="form-input" required placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="coffee_type_id" class="form-label">Select Item</label>
+                <select id="coffee_type_id" name="coffee_type_id" class="form-input" required>
+                    <option value="">Choose an item...</option>
+                    {% for category, items in categories.items() %}
+                    <optgroup label="{{ category }}">
+                        {% for item in items %}
+                        <option value="{{ item.id }}">{{ item.name }} - ${{ "%.2f"|format(item.price) }}</option>
+                        {% endfor %}
+                    </optgroup>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input type="number" id="quantity" name="quantity" class="form-input" min="1" max="10" value="1" required>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">Add to Cart</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="{{ url_for('view_cart') }}" class="btn btn-outline" style="display: inline-block;">
+                View Cart
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

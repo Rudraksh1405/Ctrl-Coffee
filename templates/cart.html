@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - ctrl+coffee{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 2rem; text-align: center;">
+        Your Shopping Cart
+    </h1>
+
+    {% if cart_items %}
+    <div class="cart-items">
+        {% for item in cart_items %}
+        <div class="card" style="margin-bottom: 1rem; padding: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="flex: 1;">
+                    <h3 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 0.5rem;">
+                        {{ item.name }}
+                    </h3>
+                    <p style="color: var(--text-light); margin-bottom: 0.25rem;">
+                        <strong>Category:</strong> {{ item.category }}
+                    </p>
+                    <p style="color: var(--text-light); margin-bottom: 0.25rem;">
+                        <strong>Price:</strong> ${{ "%.2f"|format(item.price) }} each
+                    </p>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <form action="{{ url_for('update_cart') }}" method="post" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="hidden" name="coffee_type_id" value="{{ item.id }}">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="10" 
+                               style="width: 60px; padding: 0.5rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                        <button type="submit" class="btn" style="padding: 0.5rem 1rem; background: var(--primary);">
+                            Update
+                        </button>
+                    </form>
+                    
+                    <a href="{{ url_for('remove_from_cart', coffee_type_id=item.id) }}" 
+                       class="btn" 
+                       style="background: var(--danger); padding: 0.5rem 1rem;"
+                       onclick="return confirm('Remove {{ item.name }} from cart?')">
+                        Remove
+                    </a>
+                </div>
+                
+                <div style="text-align: right;">
+                    <div style="font-size: 1.3rem; font-weight: 600; color: var(--primary);">
+                        ${{ "%.2f"|format(item.total) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card" style="margin-top: 2rem; padding: 2rem; text-align: center;">
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;">
+            Order Total: ${{ "%.2f"|format(total) }}
+        </h2>
+        
+        <form action="{{ url_for('checkout') }}" method="post" style="max-width: 400px; margin: 0 auto;">
+            <div class="form-group">
+                <label for="customer_name" class="form-label">Your Name</label>
+                <input type="text" id="customer_name" name="customer_name" class="form-input" required 
+                       placeholder="Enter your name for the order">
+            </div>
+            <button type="submit" class="btn" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                Proceed to Checkout
+            </button>
+        </form>
+    </div>
+    {% else %}
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+        <h3 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;">
+            Your Cart is Empty
+        </h3>
+        <p style="color: var(--text-light); margin-bottom: 2rem;">
+            Add some delicious items from our menu!
+        </p>
+        <a href="{{ url_for('menu') }}" class="btn">Browse Menu</a>
+    </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('menu') }}" class="btn btn-outline">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

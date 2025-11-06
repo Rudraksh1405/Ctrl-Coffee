@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Full Menu - ctrl+coffee{% endblock %}
+
+{% block content %}
+<h1 style="font-family: 'Playfair Display', serif; font-size: 3rem; text-align: center; color: var(--primary); margin-bottom: 3rem;">
+    Our Complete Menu
+</h1>
+
+{% for category, items in categories.items() %}
+<section class="category-section">
+    <h2 class="category-title">{{ category }}</h2>
+    <div class="grid grid-3">
+        {% for item in items %}
+        <div class="menu-item">
+            <div class="menu-item-name">{{ item.name }}</div>
+            <div class="menu-item-price">${{ "%.2f"|format(item.price) }}</div>
+            <div class="menu-item-description">{{ item.description }}</div>
+            <form action="{{ url_for('add_to_cart') }}" method="post" style="margin-top: 1rem;">
+                <input type="hidden" name="coffee_type_id" value="{{ item.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                    Add to Cart
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+<div style="text-align: center; margin-top: 3rem;">
+    <a href="{{ url_for('view_cart') }}" class="btn" style="margin-right: 1rem;">
+        View Cart {% if cart_count > 0 %}({{ cart_count }} items){% endif %}
+    </a>
+    <a href="{{ url_for('index') }}" class="btn btn-outline">Back to Home</a>
+</div>
+{% endblock %}

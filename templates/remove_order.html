@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Remove Orders - ctrl+coffee{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="warning-box" style="background: var(--danger-light); padding: 2rem; border-radius: 12px; border: 2px solid var(--danger); margin-bottom: 2rem;">
+        <div class="warning-title" style="color: var(--danger); font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1rem;">
+            ⚠️ Remove Orders by Customer Name
+        </div>
+        <p>This will remove <strong>ALL</strong> orders for the specified customer. This action cannot be undone.</p>
+        
+        <form action="{{ url_for('remove_order') }}" method="post">
+            <div class="form-group" style="margin: 1.5rem 0;">
+                <label for="customer_name" class="form-label" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text);">Customer Name:</label>
+                <input type="text" id="customer_name" name="customer_name" class="form-input" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;" required placeholder="Enter customer name">
+            </div>
+            <button type="submit" class="btn" style="background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%); color: var(--white); border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; width: 100%; font-size: 1.1rem;" onclick="return confirm('Are you absolutely sure you want to delete ALL orders for this customer?')">
+                Remove All Orders
+            </button>
+        </form>
+    </div>
+    
+    <div class="note" style="background: var(--accent); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; border-left: 4px solid var(--primary);">
+        <p><strong>Note:</strong> For more advanced order management (removing single orders, viewing before deleting), use the <code>remove_order.py</code> command-line tool.</p>
+    </div>
+</div>
+{% endblock %}

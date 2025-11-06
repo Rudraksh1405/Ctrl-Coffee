@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - ctrl+coffee{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <!-- Success Header -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <div style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;">✓</div>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;">
+            Order Confirmed!
+        </h1>
+        <p style="font-size: 1.2rem; color: var(--text-light);">
+            Thank you for your order, {{ order_details.order.customer_name }}!
+        </p>
+    </div>
+
+    <!-- Debug Info (remove in production) -->
+    <!-- <div style="background: #ffebee; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+        <p><strong>Debug Info:</strong></p>
+        <p>Items count: {{ order_details.items|length }}</p>
+        <p>Items: {{ order_details.items }}</p>
+    </div> -->
+
+    <!-- Bill Section -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 0.5rem;">
+                ctrl+coffee
+            </h2>
+            <p style="color: var(--text-light);">Order Receipt</p>
+        </div>
+
+        <!-- Order Information -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--accent); border-radius: 8px;">
+            <div>
+                <strong>Order #:</strong> {{ order_id }}<br>
+                <strong>Date:</strong> {{ order_details.order.order_date }}
+            </div>
+            <div>
+                <strong>Customer:</strong> {{ order_details.order.customer_name }}<br>
+                <strong>Status:</strong> <span style="color: #10b981;">Confirmed</span>
+            </div>
+        </div>
+
+        <!-- Order Items -->
+        <h3 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--secondary); padding-bottom: 0.5rem;">
+            Order Items
+        </h3>
+        
+        <div style="margin-bottom: 2rem;">
+            {% if order_details.items %}
+                {% for item in order_details.items %}
+                <div style="display: flex; justify-content: space-between; align-items: start; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                    <div style="flex: 2;">
+                        <strong style="font-size: 1.1rem;">{{ item.coffee_name }}</strong>
+                        <div style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.25rem;">
+                            {{ item.category }}
+                        </div>
+                    </div>
+                    <div style="flex: 1; text-align: center;">
+                        <div style="color: var(--text-light);">Qty: {{ item.quantity }}</div>
+                    </div>
+                    <div style="flex: 1; text-align: right;">
+                        <div style="color: var(--text-light);">${{ "%.2f"|format(item.price) }} each</div>
+                        <strong style="font-size: 1.1rem;">${{ "%.2f"|format(item.price * item.quantity) }}</strong>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                    No items found in this order.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Total -->
+        <div style="border-top: 3px double var(--primary); padding-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.3rem; font-weight: 600;">
+                <span>TOTAL AMOUNT:</span>
+                <span style="color: var(--primary); font-size: 1.5rem;">${{ "%.2f"|format(order_details.order.total_amount) }}</span>
+            </div>
+        </div>
+
+        <!-- Payment Instructions -->
+        <div style="background: var(--accent); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; text-align: center;">
+            <h4 style="font-family: 'Playfair Display', serif; color: var(--primary); margin-bottom: 1rem;">
+                Payment Instructions
+            </h4>
+            <p style="color: var(--text-light); margin-bottom: 1rem;">
+                Please proceed to the counter to complete your payment.
+            </p>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; padding: 0.75rem 1.5rem; border-radius: 8px; border: 2px solid var(--primary);">
+                <span style="font-weight: 600; color: var(--primary);">Order #{{ order_id }}</span>
+                <span style="color: var(--text-light);">•</span>
+                <span style="font-weight: 600;">${{ "%.2f"|format(order_details.order.total_amount) }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="{{ url_for('index') }}" class="btn" style="margin-right: 1rem;">
+            Back to Home
+        </a>
+        <a href="{{ url_for('menu') }}" class="btn btn-outline">
+            Order More
+        </a>
+    </div>
+</div>
+{% endblock %}
